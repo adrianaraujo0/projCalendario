@@ -15,6 +15,18 @@ const routes: Routes = [
     path: 'criadores',
     loadChildren: () => import('./criadores/criadores.module').then( m => m.CriadoresPageModule)
   },
+  {
+    path: 'login',
+    loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
+  },
+  {
+    path: 'cadastro',
+    loadChildren: () => import('./cadastro/cadastro.module').then( m => m.CadastroPageModule)
+  },
+  {
+    path: 'feed',
+    loadChildren: () => import('./feed/feed.module').then( m => m.FeedPageModule)
+  },
 ];
 
 @NgModule({
