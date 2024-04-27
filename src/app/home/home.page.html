@@ -1,20 +1,110 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
     <ion-title>
-      Blank
+      Calendario Ionic
     </ion-title>
+      <!--butão de dia atual-->
+      <ion-buttons slot="end">
+        <ion-button routerLink="/criadores">Criadores</ion-button>
+      </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button expand="block" (click)="setToday()"> dia atual</ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+  <!--butões MES SEMAN DIA-->
+  <ion-segment [(ngModel)]="calendar.mode">
+    <ion-segment-button value="month">MÊS</ion-segment-button>
+    <ion-segment-button value="week">SEMANA</ion-segment-button>
+    <ion-segment-button value="day">DIA</ion-segment-button>
+  </ion-segment>
+
+  <ion-row>
+    <ion-col size="3">
+      <ion-button fill="clear" (click)="calendarBack()">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-col> 
+
+    <ion-col size="6">
+      <h2 class="ion-text-center">{{ viewTitle }}</h2>
+    </ion-col>
+
+    <ion-col size="3">
+      <ion-button fill="clear" (click)="calendarForward()">
+        <ion-icon name="arrow-forward" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-col>  
+  </ion-row>
+
+  <!--o calendario em si-->
+  <calendar [calendarMode]="calendar.mode"
+  (onTitleChanged)="viewTitle = $event"
+  
+
+  >
+  </calendar>   
+
+<!--   (onTimeSelected)="onTimeSelected($event)" -->
+
+  <!-- botão criar evento  -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button id="inputmodal">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+
+  <!-- apresentação evento(funcionalidade do botão)  -->
+  <ion-modal #modal trigger="inputmodal"
+  [presentingElement]="presentingElement"
+  >
+    <ng-template>
+      <ion-header class="ion-no-border">
+        <ion-toolbar color="light">
+          <ion-buttons slot="start">
+            <ion-button (click)="modal.dismiss()">Fechar</ion-button>
+          </ion-buttons>
+          <ion-title> Novo Evento </ion-title>
+          <ion-buttons slot="end">
+            <ion-button color ="primary" strong (click)="scheduleEvent()" [disabled]="!newEvent.title">Salvar</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <div class="group">
+          <ion-input type="text" [(ngModel)]="newEvent.title" placeholder="Titulo"></ion-input>
+        </div>
+        
+        <div class="group">
+          <ion-item>
+            <ion-label>Dia inteiro</ion-label>
+            <ion-toggle [(ngModel)]="newEvent.allDay"></ion-toggle>
+          </ion-item>
+
+          
+          <ion-item (click)="showStart = !showStart">
+            <ion-label>Começo</ion-label>
+            <ion-text slot="end">{{formattedStart}}</ion-text>
+          </ion-item>
+          <ion-datetime locale="pt-BR" #start *ngIf="showStart" [value]="newEvent.startTime" [presentation]="newEvent.allDay ? 'date' : 'date-time'" ><span slot="time-label">Hora</span></ion-datetime>
+        
+
+
+          <ion-item (click)="showEnd = !showEnd">
+            <ion-label>Termino</ion-label>
+            <ion-text slot="end">{{formattedEnd}}</ion-text>
+          </ion-item>
+          <ion-datetime locale="pt-BR" #end *ngIf="showEnd" [value]="newEvent.endTime" [presentation]="newEvent.allDay ? 'date' : 'date-time'"  ><span slot="time-label">Hora</span></ion-datetime>
+        <!--   (iomChange)="endChanged(end.value)" -->
+        <!-- (ionChange)="startChanged(start.value) -->
+        </div>
+      Meu conteudo 
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
 </ion-content>
